@@ -5,9 +5,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 import io.micrometer.common.lang.Nullable;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -36,16 +38,12 @@ public class Recipe {
     private String description;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    // @NotBlank
-    @NotNull
-    // @Size(min = 1, max = 100)
+    @Column(nullable = false, length = 1000)
     private List<String> ingredients;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    // @NotBlank
-    @NotNull
-    // @Size(min = 1, max = 1000)
-    private List<String> steps;
+    @Column(nullable = false, length = 1000)
+    private List<@Valid String> steps;
 
     private String image;
 
