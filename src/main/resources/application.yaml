@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: JavaFlavors
+  graphql:
+    graphiql:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    generate-ddl: true
+    properties:
+      hibernate:
+        validator:
+          apply_to_ddl: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://auth.wfis.lol/application/o/javaflavors/
+
+server:
+  servlet:
+    context-path: /api
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
