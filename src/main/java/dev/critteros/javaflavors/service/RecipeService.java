@@ -1,76 +1,44 @@
 package dev.critteros.javaflavors.service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import dev.critteros.javaflavors.model.Recipe;
-import dev.critteros.javaflavors.repository.RecipeRespotiory;
+import dev.critteros.javaflavors.model.RecipeIngredient;
+import dev.critteros.javaflavors.model.RecipeStep;
+import dev.critteros.javaflavors.repository.RecipeRepository;
+import dev.critteros.javaflavors.resolver.mutation.input.RecipeInput;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 @Service
 public class RecipeService {
-    final private RecipeRespotiory recipeRespotiory;
 
-    public RecipeService(RecipeRespotiory recipeRespotiory) {
-        this.recipeRespotiory = recipeRespotiory;
+    private final RecipeRepository recipeRepository;
+    private final ModelMapper modelMapper;
+
+    RecipeService(RecipeRepository recipeRepository, ModelMapper modelMapper) {
+        this.recipeRepository = recipeRepository;
+        this.modelMapper = modelMapper;
     }
 
-    @Transactional(readOnly = true)
-    public List<Recipe> getRecipes() {
-        return recipeRespotiory.findAll();
-    }
+    public Recipe createFromInput(RecipeInput input) {
+        Recipe recipe = modelMapper.map(input, Recipe.class);
 
-    public Recipe saveRecipe(Recipe recipe) {
-        return recipeRespotiory.save(recipe);
-    }
-
-    public Optional<Recipe> getRecipeById(UUID id) {
-        return recipeRespotiory.findById(id);
-    }
-
-    public void deleteRecipeById(UUID id) {
-        recipeRespotiory.deleteById(id);
-    }
-
-    public Recipe creatRecipe(String title, String description, Optional<String> image,
-            Optional<Integer> preparationTimeMinutes,
-            Optional<Integer> cookingTimeMinutes, Optional<Integer> totalTimeMinutes, Optional<Integer> servings) {
-        Recipe recipe = new Recipe();
-        recipe.setTitle(title);
-        recipe.setDescription(description);
-        image.ifPresent(recipe::setImage);
-        preparationTimeMinutes.ifPresent(recipe::setPreparationTimeMinutes);
-        cookingTimeMinutes.ifPresent(recipe::setCookingTimeMinutes);
-        totalTimeMinutes.ifPresent(recipe::setTotalTimeMinutes);
-        servings.ifPresent(recipe::setServings);
-        return recipeRespotiory.save(recipe);
-    }
-
-    public Recipe createRecipe(String title, String description, List<String> ingredients, List<String> steps,
-            Optional<String> image, Optional<Integer> preparationTimeMinutes, Optional<Integer> cookingTimeMinutes,
-            Optional<Integer> totalTimeMinutes, Optional<Integer> servings) {
-        Recipe recipe = new Recipe();
-        recipe.setTitle(title);
-        recipe.setDescription(description);
+        var ingredients = input.ingredients().stream().map((ing) -> {
+            var ingredient = modelMapper.map(ing, RecipeIngredient.class);
+            ingredient.setRecipe(recipe);
+            return ingredient;
+        }).collect(Collectors.toSet());
         recipe.setIngredients(ingredients);
-        recipe.setSteps(steps);
-        image.ifPresent(recipe::setImage);
-        preparationTimeMinutes.ifPresent(recipe::setPreparationTimeMinutes);
-        cookingTimeMinutes.ifPresent(recipe::setCookingTimeMinutes);
-        totalTimeMinutes.ifPresent(recipe::setTotalTimeMinutes);
-        servings.ifPresent(recipe::setServings);
-        return recipeRespotiory.save(recipe);
-    }
 
-    public Recipe updateRecipe(UUID id, String title, String description, Optional<String> image) {
-        Recipe recipe = recipeRespotiory.findById(id).orElseThrow();
-        recipe.setTitle(title);
-        recipe.setDescription(description);
-        image.ifPresent(recipe::setImage);
-        return recipeRespotiory.save(recipe);
+        var steps = input.steps().stream().map((step) -> {
+            var recipeStep = modelMapper.map(step, RecipeStep.class);
+            recipeStep.setRecipe(recipe);
+            return recipeStep;
+        }).collect(Collectors.toSet());
+        recipe.setSteps(steps);
+
+        return recipeRepository.save(recipe);
     }
 
 }

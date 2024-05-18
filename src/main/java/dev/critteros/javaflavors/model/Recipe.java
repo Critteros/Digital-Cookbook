@@ -1,27 +1,21 @@
 package dev.critteros.javaflavors.model;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
-import io.micrometer.common.lang.Nullable;
-import jakarta.validation.Valid;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
+@Table(name = "recipe")
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -30,21 +24,20 @@ public class Recipe {
     @NotBlank
     @NotNull
     @Size(min = 3, max = 100)
-    private String title;
+    private String name;
 
     @NotBlank
     @NotNull
     @Size(min = 3, max = 1000)
     private String description;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Column(nullable = false, length = 1000)
-    private List<String> ingredients;
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<RecipeIngredient> ingredients;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Column(nullable = false, length = 1000)
-    private List<@Valid String> steps;
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<RecipeStep> steps;
 
+    @Nullable
     private String image;
 
     public Optional<String> getImage() {

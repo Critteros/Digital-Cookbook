@@ -1,7 +1,7 @@
 x-pg-db-credentials: &pg-db-credentials
   POSTGRES_USER: ${DB_USER:-postgres}
   POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
-  POSTGRES_DB: ${DB_NAME:-device-manager}
+  POSTGRES_DB: ${DB_NAME:-java_flavors}
 
 
 services:
