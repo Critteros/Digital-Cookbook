@@ -32,8 +32,12 @@ public class RecipeQuery {
 
     @QueryMapping("recipeById")
     public Optional<Recipe> getRecipeById(@Argument String id) {
-        UUID uid = UUID.fromString(id);
-        return recipeRepository.findById(uid);
+        try {
+            UUID uid = UUID.fromString(id);
+            return recipeRepository.findById(uid);
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
     }
 
     @QueryMapping("recipeByName")
