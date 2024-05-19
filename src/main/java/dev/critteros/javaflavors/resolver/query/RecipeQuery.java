@@ -4,6 +4,8 @@ import dev.critteros.javaflavors.model.Recipe;
 import dev.critteros.javaflavors.model.RecipeIngredient;
 import dev.critteros.javaflavors.model.RecipeStep;
 import dev.critteros.javaflavors.repository.RecipeRepository;
+import dev.critteros.javaflavors.service.UserProfileService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
@@ -14,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Controller
 @Transactional(readOnly = true)
 public class RecipeQuery {
