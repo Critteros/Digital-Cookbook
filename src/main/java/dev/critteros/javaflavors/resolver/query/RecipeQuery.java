@@ -4,7 +4,10 @@ import dev.critteros.javaflavors.model.Recipe;
 import dev.critteros.javaflavors.model.RecipeIngredient;
 import dev.critteros.javaflavors.model.RecipeStep;
 import dev.critteros.javaflavors.repository.RecipeRepository;
-import lombok.extern.slf4j.Slf4j;
+import dev.critteros.javaflavors.repository.RecipeSpecification;
+import dev.critteros.javaflavors.resolver.query.input.RecipeFilter;
+
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
@@ -15,7 +18,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Slf4j
 @Controller
 @Transactional(readOnly = true)
 public class RecipeQuery {
@@ -26,8 +28,14 @@ public class RecipeQuery {
     }
 
     @QueryMapping("recipes")
-    public List<Recipe> getRecipes() {
-        return recipeRepository.findAll();
+    public List<Recipe> getRecipes(@Argument RecipeFilter filter) {
+        Specification<Recipe> spec = Specification.where(null);
+
+        if (filter != null && filter.nameLike() != null) {
+            spec = spec.and(RecipeSpecification.nameContains(filter.nameLike()));
+        }
+
+        return recipeRepository.findAll(spec);
     }
 
     @QueryMapping("recipeById")
@@ -38,11 +46,6 @@ public class RecipeQuery {
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }
-    }
-
-    @QueryMapping("recipeByName")
-    public List<Recipe> getRecipeByName(@Argument String name) {
-        return recipeRepository.findByNameContainingIgnoreCase(name);
     }
 
     @SchemaMapping

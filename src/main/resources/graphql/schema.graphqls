@@ -1,66 +1,69 @@
 type Query {
-    recipeById(id: ID!): Recipe
-    recipeByName(name: String!): [Recipe!]!
-    recipes: [Recipe!]!
+  recipeById(id: ID!): Recipe
+  recipes(filter: RecipeFilter): [Recipe!]!
 }
 
 #########################################
 
 type Mutation {
-    createRecipe(recipe: RecipeInput!): Recipe
+  createRecipe(recipe: RecipeInput!): Recipe
 }
 
 # Types
 #########################################
 
 type Recipe {
-    id: ID!
-    name: String!
-    description: String!
-    ingredients: [RecipeIngredient!]!
-    steps: [RecipeStep!]!
-    image: String
-    preparationTimeMinutes: Int
-    cookingTimeMinutes: Int
-    totalTimeMinutes: Int
-    servings: Int
+  id: ID!
+  name: String!
+  description: String!
+  ingredients: [RecipeIngredient!]!
+  steps: [RecipeStep!]!
+  image: String
+  preparationTimeMinutes: Int
+  cookingTimeMinutes: Int
+  totalTimeMinutes: Int
+  servings: Int
 }
 
 type RecipeIngredient {
-    id: ID!
-    name: String!
-    quantity: Float!
-    unit: String
+  id: ID!
+  name: String!
+  quantity: Float!
+  unit: String
 }
 
 type RecipeStep {
-    id: ID!
-    stepName: String!
-    stepNumber: Int!
+  id: ID!
+  stepName: String!
+  stepNumber: Int!
 }
 
 # Inputs
 #########################################
 
+input RecipeFilter {
+  nameLike: String
+}
+
 input RecipeInput {
-    name: String!
-    description: String!
-    ingredients: [RecipeIngredientInput!]!
-    steps: [RecipeStepInput!]!
-    image: String
-    preparationTimeMinutes: Int
-    cookingTimeMinutes: Int
-    totalTimeMinutes: Int
-    servings: Int
+  name: String!
+  description: String!
+  ingredients: [RecipeIngredientInput!]!
+  steps: [RecipeStepInput!]!
+  image: String
+  preparationTimeMinutes: Int
+  cookingTimeMinutes: Int
+  totalTimeMinutes: Int
+  servings: Int
 }
 
 input RecipeIngredientInput {
-    name: String!
-    quantity: Float!
-    unit: String
+  name: String!
+  quantity: Float!
+  unit: String
 }
 
 input RecipeStepInput {
-    stepName: String!
-    stepNumber: Int!
+  stepName: String!
+  stepNumber: Int!
 }
