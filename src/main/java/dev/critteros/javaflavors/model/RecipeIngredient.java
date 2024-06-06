@@ -9,6 +9,9 @@ import lombok.Setter;
 
 import java.util.Optional;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Getter
 @Setter
 @Entity
@@ -19,6 +22,7 @@ public class RecipeIngredient {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe;
 

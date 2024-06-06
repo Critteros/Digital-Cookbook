@@ -1,7 +1,12 @@
 package dev.critteros.javaflavors.model;
 
+import java.util.Set;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -26,4 +31,7 @@ public class UserProfile {
 
     @NotNull
     private String email;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.DETACH, orphanRemoval = false, fetch = FetchType.LAZY)
+    private Set<Recipe> recipes;
 }

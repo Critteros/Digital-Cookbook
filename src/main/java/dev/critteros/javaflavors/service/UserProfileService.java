@@ -20,7 +20,6 @@ public class UserProfileService {
         this.modelMapper = modelMapper;
     }
 
-
     public Optional<UserInfo> getCurrentUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -33,7 +32,6 @@ public class UserProfileService {
         String name = jwt.getClaimAsString("name");
         String nickname = jwt.getClaimAsString("nickname");
         String preferredUsername = jwt.getClaimAsString("preferred_username");
-
 
         return Optional.of(UserInfo.builder()
                 .email(email)
