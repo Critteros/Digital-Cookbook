@@ -50,7 +50,6 @@ input RecipeInput {
   description: String!
   ingredients: [RecipeIngredientInput!]!
   steps: [RecipeStepInput!]!
-  image: String
   preparationTimeMinutes: Int
   cookingTimeMinutes: Int
   totalTimeMinutes: Int

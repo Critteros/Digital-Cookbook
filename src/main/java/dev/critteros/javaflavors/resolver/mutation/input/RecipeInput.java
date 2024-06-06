@@ -6,17 +6,15 @@ import dev.critteros.javaflavors.model.RecipeStep;
 import java.util.List;
 import java.util.Optional;
 
-
 public record RecipeInput(
-        String name,
-        String description,
-        List<RecipeIngredient> ingredients,
-        List<RecipeStep> steps,
-        Optional<String> image,
-        Optional<Integer> preparationTimeMinutes,
-        Optional<Integer> cookingTimeMinutes,
-        Optional<Integer> totalTimeMinutes,
-        Optional<Integer> servings
+                String name,
+                String description,
+                List<RecipeIngredient> ingredients,
+                List<RecipeStep> steps,
+                Optional<Integer> preparationTimeMinutes,
+                Optional<Integer> cookingTimeMinutes,
+                Optional<Integer> totalTimeMinutes,
+                Optional<Integer> servings
 
 ) {
 }
