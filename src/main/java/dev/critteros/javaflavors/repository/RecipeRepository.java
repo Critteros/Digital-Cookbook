@@ -12,4 +12,6 @@ import dev.critteros.javaflavors.model.Recipe;
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, UUID>, JpaSpecificationExecutor<Recipe> {
     List<Recipe> findByNameContainingIgnoreCase(String substring);
+
+    void deleteById(UUID id);
 }

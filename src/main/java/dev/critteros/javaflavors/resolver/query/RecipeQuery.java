@@ -3,6 +3,7 @@ package dev.critteros.javaflavors.resolver.query;
 import dev.critteros.javaflavors.model.Recipe;
 import dev.critteros.javaflavors.model.RecipeIngredient;
 import dev.critteros.javaflavors.model.RecipeStep;
+import dev.critteros.javaflavors.model.UserProfile;
 import dev.critteros.javaflavors.repository.RecipeRepository;
 import dev.critteros.javaflavors.repository.RecipeSpecification;
 import dev.critteros.javaflavors.resolver.query.input.RecipeFilter;
@@ -56,5 +57,10 @@ public class RecipeQuery {
     @SchemaMapping
     public List<RecipeStep> steps(Recipe recipe) {
         return recipe.getSteps().stream().toList();
+    }
+
+    @SchemaMapping
+    public UserProfile author(Recipe recipe) {
+        return recipe.getAuthor();
     }
 }
