@@ -9,6 +9,7 @@ import dev.critteros.javaflavors.resolver.mutation.input.RecipeInput;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,6 +42,22 @@ public class RecipeService {
         recipe.setAuthor(author);
 
         return recipeRepository.save(recipe);
+    }
+
+    public void deleteRecipe(UUID id) {
+        recipeRepository.deleteById(id);
+    }
+
+    public boolean recipeBelongsToUser(UUID id, UserProfile userProfile) {
+        return recipeRepository.findById(id)
+                .map(recipe -> {
+                    if (recipe.getAuthor() != null) {
+                        return recipe.getAuthor().getSub().equals(userProfile.getSub());
+                    } else {
+                        return false;
+                    }
+                })
+                .orElse(false);
     }
 
 }

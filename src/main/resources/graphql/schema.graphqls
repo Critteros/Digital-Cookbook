@@ -7,6 +7,7 @@ type Query {
 
 type Mutation {
   createRecipe(recipe: RecipeInput!): Recipe
+  deleteRecipe(id: ID!): RecipeDeleteResult
 }
 
 # Types
@@ -23,6 +24,15 @@ type Recipe {
   cookingTimeMinutes: Int
   totalTimeMinutes: Int
   servings: Int
+  author: UserInfo
+}
+
+type UserInfo {
+  sub: ID!
+  preferredUsername: String!
+  nickname: String!
+  name: String!
+  email: String!
 }
 
 type RecipeIngredient {
@@ -36,6 +46,10 @@ type RecipeStep {
   id: ID!
   stepName: String!
   stepNumber: Int!
+}
+
+type RecipeDeleteResult {
+  id: ID!
 }
 
 # Inputs
