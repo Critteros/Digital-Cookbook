@@ -7,6 +7,9 @@ import dev.critteros.javaflavors.model.UserProfile;
 import dev.critteros.javaflavors.repository.RecipeRepository;
 import dev.critteros.javaflavors.repository.RecipeSpecification;
 import dev.critteros.javaflavors.resolver.query.input.RecipeFilter;
+import graphql.schema.DataFetchingEnvironment;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -14,6 +17,8 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -62,5 +67,17 @@ public class RecipeQuery {
     @SchemaMapping
     public UserProfile author(Recipe recipe) {
         return recipe.getAuthor();
+    }
+
+    @SchemaMapping
+    public Optional<String> image(Recipe recipe) {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                .getRequest();
+        var imageOption = recipe.getImage();
+        if (imageOption.isEmpty()) {
+            return Optional.empty();
+        }
+        var image = imageOption.get();
+        return Optional.of(image.getResourceUrl(request));
     }
 }

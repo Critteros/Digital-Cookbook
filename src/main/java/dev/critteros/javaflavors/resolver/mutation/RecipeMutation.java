@@ -32,13 +32,13 @@ public class RecipeMutation {
     @MutationMapping
     @PreAuthorize("isFullyAuthenticated()")
     public Recipe createRecipe(
-            @Argument(name = "recipe") RecipeInput recipeInput) {
+            @Argument(name = "recipe") RecipeInput recipeInput, @Argument(name = "imageUid") String imageUid) {
         var userProfile = this.userProfileService.getProfileForCurrentUser();
         if (userProfile.isEmpty()) {
             throw new GraphQLException("User not authenticated");
         }
         var author = userProfile.get();
-        return recipeService.createFromInput(recipeInput, author);
+        return recipeService.createFromInput(recipeInput, author, imageUid);
     }
 
     @MutationMapping

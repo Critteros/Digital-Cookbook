@@ -1,9 +1,11 @@
 package dev.critteros.javaflavors.service;
 
+import dev.critteros.javaflavors.model.Image;
 import dev.critteros.javaflavors.model.Recipe;
 import dev.critteros.javaflavors.model.RecipeIngredient;
 import dev.critteros.javaflavors.model.RecipeStep;
 import dev.critteros.javaflavors.model.UserProfile;
+import dev.critteros.javaflavors.repository.ImageRepository;
 import dev.critteros.javaflavors.repository.RecipeRepository;
 import dev.critteros.javaflavors.resolver.mutation.input.RecipeInput;
 import org.modelmapper.ModelMapper;
@@ -16,14 +18,16 @@ import java.util.stream.Collectors;
 public class RecipeService {
 
     private final RecipeRepository recipeRepository;
+    private final ImageRepository imageRepository;
     private final ModelMapper modelMapper;
 
-    RecipeService(RecipeRepository recipeRepository, ModelMapper modelMapper) {
+    RecipeService(RecipeRepository recipeRepository, ModelMapper modelMapper, ImageRepository imageRepository) {
         this.recipeRepository = recipeRepository;
         this.modelMapper = modelMapper;
+        this.imageRepository = imageRepository;
     }
 
-    public Recipe createFromInput(RecipeInput input, UserProfile author) {
+    public Recipe createFromInput(RecipeInput input, UserProfile author, String imageUid) {
         Recipe recipe = modelMapper.map(input, Recipe.class);
 
         var ingredients = input.ingredients().stream().map((ing) -> {
@@ -38,6 +42,9 @@ public class RecipeService {
             recipeStep.setRecipe(recipe);
             return recipeStep;
         }).collect(Collectors.toSet());
+        Image image = imageRepository.findByUid(imageUid == null ? null : UUID.fromString(imageUid));
+        ;
+        recipe.setImage(image);
         recipe.setSteps(steps);
         recipe.setAuthor(author);
 

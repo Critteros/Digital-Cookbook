@@ -19,6 +19,11 @@ spring:
         jwt:
           issuer-uri: https://auth.wfis.lol/application/o/javaflavors/
           jwk-set-uri: https://auth.wfis.lol/application/o/javaflavors/jwks/
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+      enabled: true
 
 server:
   servlet:
@@ -29,4 +34,3 @@ logging:
     org:
       springframework:
         security: INFO
-

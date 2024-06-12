@@ -16,19 +16,15 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class OAuth2ResourceServer
-{
+public class OAuth2ResourceServer {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/graphiql", "/graphql").permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().permitAll())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
         http.csrf(AbstractHttpConfigurer::disable);
         http.cors((cors) -> cors.configurationSource(corsConfiguration()));
@@ -38,7 +34,7 @@ public class OAuth2ResourceServer
     CorsConfigurationSource corsConfiguration() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

@@ -39,16 +39,18 @@ public class Recipe {
     @Size(min = 3, max = 1000)
     private String description;
 
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @JoinColumn(name = "image_uid", nullable = true)
+    private Image image;
+
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<RecipeIngredient> ingredients;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<RecipeStep> steps;
 
-    @Nullable
-    private String image;
-
-    public Optional<String> getImage() {
+    public Optional<Image> getImage() {
         return Optional.ofNullable(image);
     }
 
