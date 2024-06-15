@@ -7,8 +7,6 @@ import dev.critteros.javaflavors.model.UserProfile;
 import dev.critteros.javaflavors.repository.RecipeRepository;
 import dev.critteros.javaflavors.repository.RecipeSpecification;
 import dev.critteros.javaflavors.resolver.query.input.RecipeFilter;
-import graphql.schema.DataFetchingEnvironment;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.data.jpa.domain.Specification;
