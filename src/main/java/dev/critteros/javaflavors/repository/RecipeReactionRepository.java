@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import dev.critteros.javaflavors.model.ReactionType;
@@ -17,4 +18,6 @@ public interface RecipeReactionRepository extends JpaRepository<RecipeReaction, 
     Optional<RecipeReaction> findByAuthorSubAndRecipeId(String authorId, UUID recipeId);
 
     Integer countByRecipeIdAndReactionType(UUID recipeId, ReactionType reactionType);
+
+    void deleteById(@NonNull UUID id);
 }

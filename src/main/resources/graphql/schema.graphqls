@@ -7,7 +7,7 @@ type Query {
 
 type Mutation {
   createRecipe(recipe: RecipeInput!, imageUid: String): Recipe
-  updateRecipeReaction(recipeId: ID!, reaction: ReactionType!): Recipe
+  updateRecipeReaction(recipeId: ID!, reaction: ReactionType): Recipe
   deleteRecipe(id: ID!): RecipeDeleteResult
 }
 

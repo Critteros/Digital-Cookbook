@@ -12,6 +12,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.lang.Nullable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -74,7 +75,7 @@ public class RecipeMutation {
     @MutationMapping
     @PreAuthorize("isFullyAuthenticated()")
     public Recipe updateRecipeReaction(@Argument(name = "recipeId") String id,
-            @Argument(name = "reaction") ReactionType reaction) {
+            @Argument(name = "reaction") @Nullable ReactionType reaction) {
         UUID recipeId = UUID.fromString(id);
         Optional<UserProfile> userProfileOption = this.userProfileService.getProfileForCurrentUser();
         if (userProfileOption.isEmpty()) {
@@ -85,6 +86,13 @@ public class RecipeMutation {
         Optional<RecipeReaction> reactionOption = recipeReactionRepository.findByAuthorSubAndRecipeId(
                 userProfile.getSub(),
                 recipeId);
+
+        if (reaction == null) {
+            if (reactionOption.isPresent()) {
+                recipeReactionRepository.deleteById(reactionOption.get().getUid());
+            }
+            return recipeRepository.findById(recipeId).orElseThrow();
+        }
 
         if (reactionOption.isPresent()) {
             RecipeReaction reactionEntity = reactionOption.get();
