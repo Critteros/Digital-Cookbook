@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import dev.critteros.javaflavors.model.Recipe;
@@ -13,5 +14,5 @@ import dev.critteros.javaflavors.model.Recipe;
 public interface RecipeRepository extends JpaRepository<Recipe, UUID>, JpaSpecificationExecutor<Recipe> {
     List<Recipe> findByNameContainingIgnoreCase(String substring);
 
-    void deleteById(UUID id);
+    void deleteById(@NonNull UUID id);
 }

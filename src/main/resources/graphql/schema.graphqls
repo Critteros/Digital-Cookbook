@@ -7,11 +7,26 @@ type Query {
 
 type Mutation {
   createRecipe(recipe: RecipeInput!, imageUid: String): Recipe
+  updateRecipeReaction(recipeId: ID!, reaction: ReactionType!): Recipe
   deleteRecipe(id: ID!): RecipeDeleteResult
+}
+
+# Enums
+#########################################
+
+enum ReactionType {
+  UPVOTE
+  DOWNVOTE
 }
 
 # Types
 #########################################
+
+type RecipeReactions {
+  upvoteCount: Int!
+  downvoteCount: Int!
+  userReaction: ReactionType
+}
 
 type Recipe {
   id: ID!
@@ -25,6 +40,7 @@ type Recipe {
   totalTimeMinutes: Int
   servings: Int
   author: UserInfo
+  reactions: RecipeReactions!
 }
 
 type UserInfo {

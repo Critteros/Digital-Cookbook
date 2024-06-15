@@ -6,28 +6,40 @@ import dev.critteros.javaflavors.service.RecipeService;
 import dev.critteros.javaflavors.service.UserProfileService;
 import graphql.GraphQLException;
 
+import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
+import dev.critteros.javaflavors.model.ReactionType;
 import dev.critteros.javaflavors.model.Recipe;
+import dev.critteros.javaflavors.model.RecipeReaction;
+import dev.critteros.javaflavors.model.UserProfile;
+import dev.critteros.javaflavors.repository.RecipeReactionRepository;
+import dev.critteros.javaflavors.repository.RecipeRepository;
+
 import org.springframework.transaction.annotation.Transactional;
 
 @Controller
 @Transactional
 public class RecipeMutation {
 
-    private final RecipeService recipeService;
+    @Autowired
+    private RecipeService recipeService;
+
+    @Autowired
     private UserProfileService userProfileService;
 
-    public RecipeMutation(RecipeService recipeService, UserProfileService userProfileSerivce) {
-        this.recipeService = recipeService;
-        this.userProfileService = userProfileSerivce;
-    }
+    @Autowired
+    private RecipeReactionRepository recipeReactionRepository;
+
+    @Autowired
+    private RecipeRepository recipeRepository;
 
     @MutationMapping
     @PreAuthorize("isFullyAuthenticated()")
@@ -57,5 +69,36 @@ public class RecipeMutation {
         recipeService.deleteRecipe(uid);
 
         return new RecipeDeleteResult(uid.toString());
+    }
+
+    @MutationMapping
+    @PreAuthorize("isFullyAuthenticated()")
+    public Recipe updateRecipeReaction(@Argument(name = "recipeId") String id,
+            @Argument(name = "reaction") ReactionType reaction) {
+        UUID recipeId = UUID.fromString(id);
+        Optional<UserProfile> userProfileOption = this.userProfileService.getProfileForCurrentUser();
+        if (userProfileOption.isEmpty()) {
+            throw new GraphQLException("User not authenticated");
+        }
+        UserProfile userProfile = userProfileOption.get();
+
+        Optional<RecipeReaction> reactionOption = recipeReactionRepository.findByAuthorSubAndRecipeId(
+                userProfile.getSub(),
+                recipeId);
+
+        if (reactionOption.isPresent()) {
+            RecipeReaction reactionEntity = reactionOption.get();
+            reactionEntity.setReactionType(reaction);
+            recipeReactionRepository.save(reactionEntity);
+        } else {
+            RecipeReaction reactionEntity = new RecipeReaction();
+            reactionEntity.setAuthor(userProfile);
+            reactionEntity.setRecipe(recipeRepository.findById(recipeId).orElseThrow());
+            reactionEntity.setReactionType(reaction);
+            recipeReactionRepository.save(reactionEntity);
+        }
+
+        Recipe recipe = recipeRepository.findById(recipeId).orElseThrow();
+        return recipe;
     }
 }
