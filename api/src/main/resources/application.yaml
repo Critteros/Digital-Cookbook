@@ -4,11 +4,6 @@ spring:
   graphql:
     graphiql:
       enabled: true
-    cors:
-      allowed-origins: "*"
-      allowed-methods: "*"
-      allowed-headers: "*"
-      allow-credentials: true
   datasource:
     url: ${DB_URL:jdbc:postgresql://127.0.0.1:5432/javaflavors-api}
     username: ${DB_USERNAME:postgres}
@@ -38,7 +33,6 @@ spring:
 server:
   servlet:
     context-path: /api
-  forward-headers-strategy: native
 
 logging:
   level:
