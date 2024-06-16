@@ -36,7 +36,11 @@ x-api-server-settings: &api-server-settings
 
 services:
   postgres:
-    image: postgres:latest
+    image: javaflavors-postgres:latest
+    build:
+      context: docker
+      dockerfile: Dockerfile
+    pull_policy: build
     environment:
       <<: [*pg-db-credentials, *db-front-credentials, *db-api-credentials]
     volumes:
