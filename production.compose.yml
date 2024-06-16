@@ -69,7 +69,7 @@ services:
       <<: [*oidc-settings, *web-server-settings]
       DB_HOST: postgres
       DB_PORT: 5432
-      PUBLIC_INTERNAL_API_URL: http://api:8080
+      PUBLIC_INTERNAL_API_URL: ${PUBLIC_API_URL}
       PROTOCOL_HEADER: x-forwarded-proto
       HOST_HEADER: x-forwarded-host
       ORIGIN: ${PUBLIC_URL}
