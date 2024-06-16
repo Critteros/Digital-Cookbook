@@ -3,11 +3,13 @@ import { StatusCodes } from 'http-status-codes';
 import { dev } from '$app/environment';
 
 import * as authentik from '$lib/server/oidc/authentik';
+import { getOIDCConfiguration } from '$lib/server/oidc/authentik/configuration';
 import { StateCookie } from '$lib/server/oidc/authentik';
 
 export async function GET(event: RequestEvent): Promise<Response> {
+  const { publicUrl } = getOIDCConfiguration();
   const { url, state, codeVerifier } = await authentik.getAuthorizationUrl({
-    baseUri: event.url.origin,
+    baseUri: publicUrl,
   });
   const referer = event.request.headers.get('referer');
 

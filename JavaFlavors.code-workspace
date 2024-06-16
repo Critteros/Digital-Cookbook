@@ -17,6 +17,7 @@
     "files.exclude": {
       "**/web": true,
       "**/api": true
-    }
+    },
+    "java.compile.nullAnalysis.mode": "automatic"
   }
 }

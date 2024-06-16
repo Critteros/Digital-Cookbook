@@ -8,10 +8,12 @@ import {
   createUserFromIDToken,
 } from '$lib/server/oidc';
 import { StateCookie, exchangeCodeForTokens } from '$lib/server/oidc/authentik';
+import { getOIDCConfiguration } from '$lib/server/oidc/authentik/configuration';
 import { getLucia } from '$lib/server/auth';
 
 export async function GET(event: RequestEvent): Promise<Response> {
   const lucia = getLucia();
+  const { publicUrl } = getOIDCConfiguration();
   const { state, code } = parseRedirectParams(event.url);
   const cookieRaw = event.cookies.get(StateCookie.cookieName) ?? null;
   event.cookies.delete(StateCookie.cookieName, { path: '/' });
@@ -29,7 +31,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
   const tokens = await exchangeCodeForTokens({
     code,
     codeVerifier,
-    baseUri: event.url.origin,
+    baseUri: publicUrl,
   });
   const identity = parseIDToken(tokens.idToken);
   const user = (await getUserById(identity.sub)) ?? (await createUserFromIDToken(identity));
