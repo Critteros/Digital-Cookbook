@@ -1,0 +1,13 @@
+{
+  "ingredient": "Ingredient",
+  "ingredients": "Ingredients",
+  "steps": "Steps",
+  "preparationTime": "Preparation Time",
+  "minutes": "Minutes",
+  "servings": "Servings",
+  "cookingTime": "Cooking Time",
+  "deleteRecipe": "Delete Recipe",
+  "recipeAddedBy": "Recipe added by:",
+  "like": "Like",
+  "dislike": "Dislike"
+}

@@ -1,0 +1,5 @@
+query Recipes($search: String!) {
+  recipes: recipes(filter: { nameLike: $search }) @list(name: "All_Recipes") {
+    ...RecipeDisplay
+  }
+}

@@ -1,0 +1,7 @@
+.idea
+.vscode
+.svelte-kit
+$houdini
+node_modules
+.env
+.env-sample

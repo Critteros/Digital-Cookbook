@@ -1,0 +1,28 @@
+query Recipe($recipeId: ID!) @blocking {
+  recipe: recipeById(id: $recipeId) @required {
+    id
+    name
+    description
+    image
+    ingredients {
+      id
+      name
+      quantity
+      unit
+    }
+    steps {
+      id
+      stepName
+      stepNumber
+    }
+    cookingTimeMinutes
+    preparationTimeMinutes
+    totalTimeMinutes
+    servings
+    author {
+      sub
+      preferredUsername
+    }
+    ...RecipeReactionsFragment
+  }
+}

@@ -1,0 +1,103 @@
+"""Indicates an Input Object is a OneOf Input Object."""
+directive @oneOf on INPUT_OBJECT
+
+"""########################################"""
+type Mutation {
+  createRecipe(imageUid: String, recipe: RecipeInput!): Recipe
+  deleteRecipe(id: ID!): RecipeDeleteResult
+  updateRecipeReaction(reaction: ReactionType, recipeId: ID!): Recipe
+}
+
+type Query {
+  recipeById(id: ID!): Recipe
+  recipes(filter: RecipeFilter): [Recipe!]!
+}
+
+"""
+ Enums
+########################################
+"""
+enum ReactionType {
+  DOWNVOTE
+  UPVOTE
+}
+
+type Recipe {
+  author: UserInfo
+  cookingTimeMinutes: Int
+  description: String!
+  id: ID!
+  image: String
+  ingredients: [RecipeIngredient!]!
+  name: String!
+  preparationTimeMinutes: Int
+  reactions: RecipeReactions!
+  servings: Int
+  steps: [RecipeStep!]!
+  totalTimeMinutes: Int
+}
+
+type RecipeDeleteResult {
+  id: ID!
+}
+
+"""
+ Inputs
+########################################
+"""
+input RecipeFilter {
+  nameLike: String
+}
+
+type RecipeIngredient {
+  id: ID!
+  name: String!
+  quantity: Float!
+  unit: String
+}
+
+input RecipeIngredientInput {
+  name: String!
+  quantity: Float!
+  unit: String
+}
+
+input RecipeInput {
+  cookingTimeMinutes: Int
+  description: String!
+  ingredients: [RecipeIngredientInput!]!
+  name: String!
+  preparationTimeMinutes: Int
+  servings: Int
+  steps: [RecipeStepInput!]!
+  totalTimeMinutes: Int
+}
+
+"""
+ Types
+########################################
+"""
+type RecipeReactions {
+  downvoteCount: Int!
+  upvoteCount: Int!
+  userReaction: ReactionType
+}
+
+type RecipeStep {
+  id: ID!
+  stepName: String!
+  stepNumber: Int!
+}
+
+input RecipeStepInput {
+  stepName: String!
+  stepNumber: Int!
+}
+
+type UserInfo {
+  email: String!
+  name: String!
+  nickname: String!
+  preferredUsername: String!
+  sub: ID!
+}
