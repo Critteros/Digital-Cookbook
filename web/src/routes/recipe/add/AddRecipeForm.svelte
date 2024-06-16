@@ -10,7 +10,7 @@
   import { Separator } from '$lib/components/ui/separator';
   import { Image } from '$lib/components/ui/image';
   import { t } from '$lib/translations';
-  import { invalidate, goto } from '$app/navigation';
+  import { goto, invalidateAll } from '$app/navigation';
   import { cache } from '$houdini';
 
   import { formSchema, type FormSchema } from './schema';
@@ -24,8 +24,8 @@
     validationMethod: 'onsubmit',
     onResult: ({ result }) => {
       if (result.type === 'redirect') {
-        invalidate(result.location);
-        cache.markStale('Recipe');
+        invalidateAll();
+        cache.markStale();
         goto(result.location);
       }
     },
