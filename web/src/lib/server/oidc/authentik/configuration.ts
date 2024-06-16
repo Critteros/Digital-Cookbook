@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { env } from '$env/dynamic/private';
+import { env as envPrivate } from '$env/dynamic/private';
+import { env as envPublic } from '$env/dynamic/public';
 
 export function getOIDCConfiguration() {
   return z
@@ -17,7 +18,7 @@ export function getOIDCConfiguration() {
       clientSecret: data.OIDC_CLIENT_SECRET,
       publicUrl: data.PUBLIC_URL,
     }))
-    .parse(env);
+    .parse({ ...envPrivate, ...envPublic });
 }
 
 export const scopes = ['openid', 'profile', 'email', 'offline_access'];

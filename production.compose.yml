@@ -67,6 +67,7 @@ services:
       <<: [*oidc-settings, *web-server-settings]
       DB_HOST: postgres
       DB_PORT: 5432
+      PUBLIC_INTERNAL_API_URL: http://api:8080
     depends_on:
       postgres:
         condition: service_healthy
