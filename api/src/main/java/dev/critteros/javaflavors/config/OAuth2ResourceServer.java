@@ -22,24 +22,23 @@ public class OAuth2ResourceServer {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(spec -> spec.configurationSource(apiCorsConfigSource()))
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest().permitAll())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.cors((cors) -> cors.configurationSource(corsConfiguration()));
-        http.headers().addHeaderWriter(
-                new StaticHeadersWriter("Access-Control-Allow-Origin", "*"));
         return http.build();
     }
 
-    CorsConfigurationSource corsConfiguration() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOriginPattern(CorsConfiguration.ALL);
-        configuration.setAllowedMethods(List.of(CorsConfiguration.ALL));
-        configuration.setAllowedHeaders(List.of(CorsConfiguration.ALL));
+    CorsConfigurationSource apiCorsConfigSource() {
+        var configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(List.of("*"));
+        configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
+
+        var source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", configuration);
         return source;
     }
 }
