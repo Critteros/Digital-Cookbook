@@ -4,16 +4,20 @@
 
   import { Toggle } from '$lib/components/ui/toggle';
   import { t } from '$lib/translations';
+  import { getUserContext } from '$lib/context/userContext';
 
   export let reactionType: 'like' | 'dislike';
   export let active: boolean = false;
   export let count: number;
+
+  const userStore = getUserContext();
 </script>
 
 <Toggle
   class="flex flex-row items-center gap-2 border-2 border-solid border-secondary"
   bind:pressed={active}
   on:click
+  disabled={!Boolean($userStore)}
 >
   {#if reactionType === 'like'}
     <ThumbsUpIcon />
